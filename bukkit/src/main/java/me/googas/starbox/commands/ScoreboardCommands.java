@@ -20,7 +20,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Commands to debug scoreboards. Javadoc's warnings are suppressed as commands already have a
@@ -206,7 +205,6 @@ public class ScoreboardCommands {
           manager);
     }
 
-    @Nullable
     @Override
     public String getPermission() {
       return "starbox.scoreboard";

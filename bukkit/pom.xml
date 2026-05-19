@@ -132,13 +132,6 @@
             <version>4.1.1</version>
             <scope>provided</scope>
         </dependency>
-        <!-- PAPI -->
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.11.1</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
     
 </project>

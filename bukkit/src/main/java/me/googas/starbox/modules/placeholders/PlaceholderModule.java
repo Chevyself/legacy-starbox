@@ -5,13 +5,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.NonNull;
-import me.googas.starbox.Starbox;
-import me.googas.starbox.compatibilities.placeholderapi.PAPIPlaceholderModule;
 import me.googas.starbox.modules.Module;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.plugin.Plugin;
@@ -104,11 +101,6 @@ public class PlaceholderModule implements Module {
    */
   @NonNull
   public String build(@NonNull OfflinePlayer player, @NonNull String raw) {
-    Optional<PAPIPlaceholderModule> papiPlaceholderModule =
-        Starbox.getModules().get(PAPIPlaceholderModule.class);
-    if (papiPlaceholderModule.isPresent()) {
-      raw = papiPlaceholderModule.get().build(player, raw);
-    }
     Matcher matcher = PlaceholderModule.PATTERN.matcher(raw);
     while (matcher.find()) {
       String name = matcher.group().replace("%", "");
