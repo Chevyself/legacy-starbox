@@ -1,11 +1,10 @@
 package me.googas.starbox.commands.providers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.github.chevyself.starbox.bukkit.context.CommandContext;
 import com.github.chevyself.starbox.bukkit.providers.type.BukkitArgumentProvider;
 import com.github.chevyself.starbox.exceptions.ArgumentProviderException;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.NonNull;
 import me.googas.reflect.wrappers.inventory.WrappedEnchantment;
 import me.googas.starbox.BukkitLine;

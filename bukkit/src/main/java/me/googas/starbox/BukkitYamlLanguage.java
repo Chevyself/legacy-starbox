@@ -1,5 +1,6 @@
 package me.googas.starbox;
 
+import com.github.chevyself.starbox.common.Components;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,8 +11,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
-import com.github.chevyself.starbox.common.Components;
 import lombok.Getter;
 import lombok.NonNull;
 import net.md_5.bungee.api.chat.BaseComponent;

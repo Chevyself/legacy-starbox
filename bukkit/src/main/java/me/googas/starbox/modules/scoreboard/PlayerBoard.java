@@ -1,5 +1,6 @@
 package me.googas.starbox.modules.scoreboard;
 
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -7,8 +8,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import lombok.Getter;
 import lombok.NonNull;
 import me.googas.reflect.APIVersion;

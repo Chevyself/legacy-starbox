@@ -1,9 +1,9 @@
 package me.googas.starbox.utility.items.meta;
 
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import java.util.HashMap;
 import lombok.Getter;
 import lombok.NonNull;
-import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import me.googas.reflect.APIVersion;
 import me.googas.reflect.wrappers.WrappedClass;
 import me.googas.reflect.wrappers.WrappedMethod;

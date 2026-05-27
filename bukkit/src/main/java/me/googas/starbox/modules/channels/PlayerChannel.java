@@ -1,11 +1,10 @@
 package me.googas.starbox.modules.channels;
 
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
+import com.github.chevyself.starbox.common.Components;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
-
-import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
-import com.github.chevyself.starbox.common.Components;
 import lombok.NonNull;
 import me.googas.reflect.packet.PacketType;
 import me.googas.reflect.wrappers.chat.WrappedChatComponent;

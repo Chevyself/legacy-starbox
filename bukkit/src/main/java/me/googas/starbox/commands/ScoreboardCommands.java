@@ -1,17 +1,15 @@
 package me.googas.starbox.commands;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.github.chevyself.starbox.annotations.Command;
 import com.github.chevyself.starbox.annotations.Free;
 import com.github.chevyself.starbox.annotations.Required;
 import com.github.chevyself.starbox.arguments.ArgumentBehaviour;
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import com.github.chevyself.starbox.common.CommandPermission;
 import com.github.chevyself.starbox.result.Result;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.NonNull;
-import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import me.googas.starbox.BukkitLine;
 import me.googas.starbox.Starbox;
 import me.googas.starbox.modules.scoreboard.MultiBoard;
@@ -62,9 +60,7 @@ public class ScoreboardCommands {
   }
 
   @CommandPermission("starbox.scoreboard")
-  @Command(
-      aliases = "rate",
-      description = "Set the rate in which the scoreboard updates")
+  @Command(aliases = "rate", description = "Set the rate in which the scoreboard updates")
   public Result rate(
       CommandSender sender,
       @Required(name = "rate", description = "The new rate in Minecraft ticks") int rate) {
@@ -74,12 +70,13 @@ public class ScoreboardCommands {
   }
 
   @CommandPermission("starbox.scoreboard")
-  @Command(
-      aliases = "title",
-      description = "Set the title of the scoreboard")
+  @Command(aliases = "title", description = "Set the title of the scoreboard")
   public Result title(
       CommandSender sender,
-      @Required(name = "title", description = "The new title of the scoreboard", behaviour = ArgumentBehaviour.CONTINUOUS)
+      @Required(
+              name = "title",
+              description = "The new title of the scoreboard",
+              behaviour = ArgumentBehaviour.CONTINUOUS)
           String title) {
     String formatted = BukkitUtils.format(title);
     this.scoreboard.setTitle(formatted);
@@ -87,9 +84,7 @@ public class ScoreboardCommands {
   }
 
   @CommandPermission("starbox.scoreboard")
-  @Command(
-      aliases = "insert",
-      description = "Add a player to this scoreboard")
+  @Command(aliases = "insert", description = "Add a player to this scoreboard")
   public Result insert(
       CommandSender sender,
       @Required(name = "player", description = "The player to add to the scoreboard")
@@ -104,9 +99,7 @@ public class ScoreboardCommands {
   }
 
   @CommandPermission("starbox.scoreboard")
-  @Command(
-      aliases = "eject",
-      description = "Eject a player from this scoreboard")
+  @Command(aliases = "eject", description = "Eject a player from this scoreboard")
   public Result eject(
       CommandSender sender,
       @Required(name = "player", description = "The player to eject from the scoreboard")
@@ -119,7 +112,11 @@ public class ScoreboardCommands {
   @Command(aliases = "add", description = "Add a new line")
   public Result add(
       CommandSender sender,
-      @Required(name = "line", description = "The line to add", behaviour = ArgumentBehaviour.CONTINUOUS) BukkitLine line) {
+      @Required(
+              name = "line",
+              description = "The line to add",
+              behaviour = ArgumentBehaviour.CONTINUOUS)
+          BukkitLine line) {
     scoreboard.add(line);
     return BukkitLine.localized(sender, "scoreboard.add").asResult();
   }
@@ -134,7 +131,11 @@ public class ScoreboardCommands {
                 "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"
               })
           int position,
-      @Required(name = "line", description = "The line to set", behaviour = ArgumentBehaviour.CONTINUOUS) BukkitLine line) {
+      @Required(
+              name = "line",
+              description = "The line to set",
+              behaviour = ArgumentBehaviour.CONTINUOUS)
+          BukkitLine line) {
     if (position < 0) return BukkitLine.localized(sender, "scoreboard.set.less-0").asResult();
     if (position > 14) return BukkitLine.localized(sender, "scoreboard.set.more-14").asResult();
     scoreboard.set(new ScoreboardLine(line, position));
@@ -142,9 +143,7 @@ public class ScoreboardCommands {
   }
 
   @CommandPermission("starbox.scoreboard")
-  @Command(
-      aliases = "update",
-      description = "Updates the scoreboard")
+  @Command(aliases = "update", description = "Updates the scoreboard")
   public Result update(
       CommandSender sender,
       @Free(
@@ -164,9 +163,7 @@ public class ScoreboardCommands {
   }
 
   @CommandPermission("starbox.scoreboard")
-  @Command(
-      aliases = "refresh",
-      description = "Make an position refresh automatically")
+  @Command(aliases = "refresh", description = "Make an position refresh automatically")
   public Result refresh(
       CommandSender sender,
       @Required(name = "position", description = "The position to refresh automatically")
@@ -182,9 +179,7 @@ public class ScoreboardCommands {
   }
 
   @CommandPermission("starbox.scoreboard")
-  @Command(
-      aliases = "fix",
-      description = "Make an position stay fixed")
+  @Command(aliases = "fix", description = "Make an position stay fixed")
   public Result fix(
       CommandSender sender,
       @Required(name = "position", description = "The position to fix") int position) {

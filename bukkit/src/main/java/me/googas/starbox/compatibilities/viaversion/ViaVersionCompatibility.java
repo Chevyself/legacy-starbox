@@ -1,13 +1,12 @@
 package me.googas.starbox.compatibilities.viaversion;
 
+import com.github.chevyself.starbox.bukkit.commands.BukkitCommand;
+import com.github.chevyself.starbox.bukkit.context.CommandContext;
+import com.github.chevyself.starbox.providers.StarboxContextualProvider;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.logging.Level;
-
-import com.github.chevyself.starbox.bukkit.commands.BukkitCommand;
-import com.github.chevyself.starbox.bukkit.context.CommandContext;
-import com.github.chevyself.starbox.providers.StarboxContextualProvider;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;

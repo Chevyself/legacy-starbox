@@ -1,5 +1,9 @@
 package me.googas.starbox;
 
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
+import com.github.chevyself.starbox.common.Components;
+import com.github.chevyself.starbox.exceptions.ArgumentProviderException;
+import com.github.chevyself.starbox.result.Result;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,11 +12,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
-import com.github.chevyself.starbox.common.Components;
-import com.github.chevyself.starbox.exceptions.ArgumentProviderException;
-import com.github.chevyself.starbox.result.Result;
 import lombok.Getter;
 import lombok.NonNull;
 import me.googas.starbox.builders.Line;

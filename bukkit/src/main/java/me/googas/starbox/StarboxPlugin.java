@@ -54,7 +54,8 @@ public class StarboxPlugin extends JavaPlugin {
               new HoverEventActionProvider());
 
   @NonNull
-  private final CommandManager<CommandContext, BukkitCommand> manager = new CommandManagerBuilder<>(new BukkitAdapter(this, true))
+  private final CommandManager<CommandContext, BukkitCommand> manager =
+      new CommandManagerBuilder<>(new BukkitAdapter(this, true))
           .setProvidersRegistry(providers)
           .setMessagesProvider(messages)
           .build();
@@ -70,10 +71,9 @@ public class StarboxPlugin extends JavaPlugin {
         new PlaceholderModule().registerAll(this, new Placeholder.Name(), new Placeholder.Ping()));
     // Command registration
     manager.parseAndRegisterAll(
-            new ComponentBuilderCommands(),
-            new ItemBuilderCommands(),
-            new ScoreboardCommands().start(this)
-    );
+        new ComponentBuilderCommands(),
+        new ItemBuilderCommands(),
+        new ScoreboardCommands().start(this));
     // Check compatibilities
     compatibilities.check().getCompatibilities().stream()
         .filter(Compatibility::isEnabled)

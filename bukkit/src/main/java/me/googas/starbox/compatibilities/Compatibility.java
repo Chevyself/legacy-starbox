@@ -1,10 +1,9 @@
 package me.googas.starbox.compatibilities;
 
-import java.util.Collection;
-
 import com.github.chevyself.starbox.bukkit.commands.BukkitCommand;
 import com.github.chevyself.starbox.bukkit.context.CommandContext;
 import com.github.chevyself.starbox.providers.StarboxContextualProvider;
+import java.util.Collection;
 import lombok.NonNull;
 import me.googas.starbox.Starbox;
 import me.googas.starbox.StarboxPlugin;
