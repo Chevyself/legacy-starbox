@@ -320,6 +320,22 @@ public class CoreFiles {
     return true;
   }
 
+  public static boolean createAll(@NonNull File file) {
+    if (file.exists()) {
+      return true;
+    }
+    try {
+      if (file.getParentFile() != null) {
+        if (!file.getParentFile().exists() && !file.getParentFile().mkdirs()) {
+          return false;
+        }
+      }
+      return file.createNewFile();
+    } catch (IOException e) {
+      return false;
+    }
+  }
+
   /** Validates the name/directory of a file to be compatible with every os */
   private static class FileNameValidator {
 
