@@ -2,10 +2,11 @@ package me.googas.starbox.commands.providers;
 
 import java.util.Arrays;
 import java.util.List;
+
+import com.github.chevyself.starbox.bukkit.context.CommandContext;
+import com.github.chevyself.starbox.bukkit.providers.type.BukkitArgumentProvider;
+import com.github.chevyself.starbox.exceptions.ArgumentProviderException;
 import lombok.NonNull;
-import me.googas.commands.bukkit.context.CommandContext;
-import me.googas.commands.bukkit.providers.type.BukkitArgumentProvider;
-import me.googas.commands.exceptions.ArgumentProviderException;
 import me.googas.reflect.APIVersion;
 import me.googas.reflect.wrappers.WrappedClass;
 import me.googas.reflect.wrappers.WrappedMethod;
@@ -13,7 +14,7 @@ import me.googas.starbox.BukkitLine;
 import me.googas.starbox.utility.Versions;
 import net.md_5.bungee.api.ChatColor;
 
-/** Provides {@link ChatColor} to the {@link me.googas.commands.bukkit.CommandManager}. */
+/** Provides {@link ChatColor} to the {@link com.github.chevyself.starbox.CommandManager}. */
 public class BungeeChatColorProvider implements BukkitArgumentProvider<ChatColor> {
 
   @NonNull

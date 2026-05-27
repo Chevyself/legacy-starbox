@@ -106,15 +106,9 @@
         </dependency>
         <!-- Command Framework -->
         <dependency>
-            <groupId>me.googas.starbox-commands</groupId>
+            <groupId>com.github.chevyself.starbox-commands</groupId>
             <artifactId>bukkit</artifactId>
-            <version>e07884f180</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>me.googas.starbox</groupId>
-                    <artifactId>core</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>1f35b847fb</version>
         </dependency>
         <!-- Spigot -->
         <dependency>

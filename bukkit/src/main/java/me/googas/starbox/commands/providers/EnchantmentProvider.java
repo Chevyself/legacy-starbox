@@ -2,15 +2,16 @@ package me.googas.starbox.commands.providers;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.github.chevyself.starbox.bukkit.context.CommandContext;
+import com.github.chevyself.starbox.bukkit.providers.type.BukkitArgumentProvider;
+import com.github.chevyself.starbox.exceptions.ArgumentProviderException;
 import lombok.NonNull;
-import me.googas.commands.bukkit.context.CommandContext;
-import me.googas.commands.bukkit.providers.type.BukkitArgumentProvider;
-import me.googas.commands.exceptions.ArgumentProviderException;
 import me.googas.reflect.wrappers.inventory.WrappedEnchantment;
 import me.googas.starbox.BukkitLine;
 import org.bukkit.enchantments.Enchantment;
 
-/** Provides {@link Enchantment} to the {@link me.googas.commands.bukkit.CommandManager}. */
+/** Provides {@link Enchantment} to the {@link com.github.chevyself.starbox.CommandManager}. */
 public class EnchantmentProvider implements BukkitArgumentProvider<Enchantment> {
 
   @NonNull

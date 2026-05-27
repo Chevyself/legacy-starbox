@@ -8,18 +8,20 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
+import com.github.chevyself.starbox.common.Components;
+import com.github.chevyself.starbox.exceptions.ArgumentProviderException;
+import com.github.chevyself.starbox.result.Result;
 import lombok.Getter;
 import lombok.NonNull;
-import me.googas.commands.bukkit.result.Result;
-import me.googas.commands.bukkit.utils.BukkitUtils;
-import me.googas.commands.bungee.utils.Components;
-import me.googas.commands.exceptions.ArgumentProviderException;
 import me.googas.starbox.builders.Line;
 import me.googas.starbox.modules.channels.Channel;
 import me.googas.starbox.modules.channels.ForwardingChannel;
 import me.googas.starbox.modules.channels.PlayerChannel;
 import me.googas.starbox.modules.language.LanguageModule;
 import me.googas.starbox.modules.placeholders.PlaceholderModule;
+import me.googas.starbox.utility.BaseComponentResult;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.OfflinePlayer;
@@ -320,7 +322,7 @@ public interface BukkitLine extends Line {
 
     @Override
     public @NonNull Result asResult() {
-      return new Result(this.build());
+      return new BaseComponentResult(this.build());
     }
 
     @Override
@@ -367,7 +369,7 @@ public interface BukkitLine extends Line {
 
     @Override
     public @NonNull Result asResult() {
-      return new Result(this.build());
+      return new BaseComponentResult(this.build());
     }
 
     @Override

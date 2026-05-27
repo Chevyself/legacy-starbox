@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.github.chevyself.starbox.annotations.Command;
+import com.github.chevyself.starbox.annotations.Required;
+import com.github.chevyself.starbox.arguments.ArgumentBehaviour;
+import com.github.chevyself.starbox.common.CommandPermission;
+import com.github.chevyself.starbox.result.Result;
 import lombok.NonNull;
-import me.googas.commands.annotations.Multiple;
-import me.googas.commands.annotations.Required;
-import me.googas.commands.bukkit.CommandManager;
-import me.googas.commands.bukkit.annotations.Command;
-import me.googas.commands.bukkit.result.Result;
-import me.googas.commands.bukkit.utils.BukkitUtils;
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import me.googas.io.StarboxFile;
 import me.googas.reflect.wrappers.inventory.WrappedEnchantment;
 import me.googas.starbox.BukkitLine;
@@ -34,16 +35,17 @@ public class ItemBuilderCommands {
 
   @NonNull private final Map<UUID, ItemBuilder> builders = new HashMap<>();
 
-  @Command(aliases = "build", description = "Build the item", permission = "starbox.item-builder")
+  @CommandPermission("starbox.item-builder")
+  @Command(aliases = "build", description = "Build the item")
   public Result build(Player player) {
     player.getInventory().addItem(this.getBuilder(player).build());
     return BukkitLine.localized(player, "item-builder.build").asResult();
   }
 
+  @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "material",
-      description = "Change the material of the item",
-      permission = "starbox.item-builder")
+      description = "Change the material of the item")
   public Result material(
       Player player,
       @Required(name = "material", description = "The new material of the item")
@@ -54,10 +56,10 @@ public class ItemBuilderCommands {
         .asResult();
   }
 
+  @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "amount",
-      description = "Change the amount of the item",
-      permission = "starbox.item-builder")
+      description = "Change the amount of the item")
   public Result amount(
       Player player,
       @Required(name = "amount", description = "The new amount of the item") int amount) {
@@ -65,36 +67,36 @@ public class ItemBuilderCommands {
     return BukkitLine.localized(player, "item-builder.amount").format(amount).asResult();
   }
 
+  @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "name",
-      description = "Set the name of the item",
-      permission = "starbox.item-builder")
+      description = "Set the name of the item")
   public Result name(
       Player player,
-      @Required(name = "name", description = "The new name of the item") @Multiple String name) {
+      @Required(name = "name", description = "The new name of the item", behaviour = ArgumentBehaviour.CONTINUOUS) String name) {
     this.getBuilder(player).withMeta(meta -> meta.setName(name));
     return BukkitLine.localized(player, "item-builder.name")
         .format(BukkitUtils.format(name))
         .asResult();
   }
 
+    @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "lore",
-      description = "Set the lore of the item",
-      permission = "starbox.item-builder")
+      description = "Set the lore of the item")
   public Result lore(
       Player player,
-      @Required(name = "lore", description = "The new lore of the item") @Multiple String lore) {
+      @Required(name = "lore", description = "The new lore of the item", behaviour = ArgumentBehaviour.CONTINUOUS) String lore) {
     this.getBuilder(player).withMeta(meta -> meta.setLore(lore));
     return BukkitLine.localized(player, "item-builder.lore")
         .format(BukkitUtils.format(lore))
         .asResult();
   }
 
+    @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "unbreakable",
-      description = "Set whether the item is unbreakable",
-      permission = "starbox.item-builder")
+      description = "Set whether the item is unbreakable")
   public Result unbreakable(
       Player player,
       @Required(name = "unbreakable", description = "Whether the item has to be unbreakable")
@@ -103,10 +105,10 @@ public class ItemBuilderCommands {
     return BukkitLine.localized(player, "item-builder.unbreakable").format(unbreakable).asResult();
   }
 
+    @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "owner",
-      description = "Set the owner of the skull",
-      permission = "starbox.item-builder")
+      description = "Set the owner of the skull")
   public Result owner(
       Player player,
       @Required(name = "owner", description = "The owner of the skull") OfflinePlayer owner) {
@@ -120,10 +122,10 @@ public class ItemBuilderCommands {
     return BukkitLine.localized(player, "item-builder.not-skull").asResult();
   }
 
+    @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "skin",
-      description = "Set the skin of the skull",
-      permission = "starbox.item-builder")
+      description = "Set the skin of the skull")
   public Result skin(
       Player player,
       @Required(name = "skin", description = "The skin in its Base64") String base64) {
@@ -136,19 +138,20 @@ public class ItemBuilderCommands {
     return BukkitLine.localized(player, "item-builder.not-skull").asResult();
   }
 
+    @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "reset",
-      description = "Reset your item builder",
-      permission = "starbox.item-builder")
+      description = "Reset your item builder"
+      )
   public Result reset(Player player) {
     this.builders.remove(player.getUniqueId());
     return BukkitLine.localized(player, "item-builder.reset").asResult();
   }
 
+    @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "export",
-      description = "Export your current builder",
-      permission = "starbox.item-builder")
+      description = "Export your current builder")
   public Result export(
       Player player,
       @Required(name = "name", description = "The name of the exported file") String name) {
@@ -165,10 +168,10 @@ public class ItemBuilderCommands {
     }
   }
 
+    @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "enchant",
-      description = "Enchant the item",
-      permission = "starbox.item-builder")
+      description = "Enchant the item")
   public Result enchant(
       Player player,
       @Required(name = "enchantment", description = "The enchantment") Enchantment enchantment,
@@ -186,10 +189,10 @@ public class ItemBuilderCommands {
     }
   }
 
+    @CommandPermission("starbox.item-builder")
   @Command(
       aliases = "import",
-      description = "Import a builder",
-      permission = "starbox.item-builder")
+      description = "Import a builder")
   public Result importBuilder(
       Player player,
       @Required(name = "name", description = "The name of the file to import") String name) {
@@ -214,24 +217,6 @@ public class ItemBuilderCommands {
       }
     }
     return BukkitLine.localized(player, "item-builder.import.no-file").format(file).asResult();
-  }
-
-  public static class Parent extends StarboxParentCommand {
-
-    public Parent(@NonNull CommandManager manager) {
-      super(
-          "itemBuilder",
-          "Parent command to build items",
-          "itemBuilder <subcommand>",
-          Collections.singletonList("ib"),
-          false,
-          manager);
-    }
-
-    @Override
-    public String getPermission() {
-      return "starbox.item-builder";
-    }
   }
 
   @NonNull

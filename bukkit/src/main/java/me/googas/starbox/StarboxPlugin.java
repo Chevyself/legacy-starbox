@@ -1,13 +1,15 @@
 package me.googas.starbox;
 
+import com.github.chevyself.starbox.CommandManager;
+import com.github.chevyself.starbox.CommandManagerBuilder;
+import com.github.chevyself.starbox.bukkit.BukkitAdapter;
+import com.github.chevyself.starbox.bukkit.commands.BukkitCommand;
+import com.github.chevyself.starbox.bukkit.context.CommandContext;
+import com.github.chevyself.starbox.bukkit.messages.BukkitMessagesProvider;
+import com.github.chevyself.starbox.bukkit.messages.GenericBukkitMessagesProvider;
+import com.github.chevyself.starbox.registry.ProvidersRegistry;
 import lombok.Getter;
 import lombok.NonNull;
-import me.googas.commands.bukkit.CommandManager;
-import me.googas.commands.bukkit.context.CommandContext;
-import me.googas.commands.bukkit.messages.BukkitMessagesProvider;
-import me.googas.commands.bukkit.messages.MessagesProvider;
-import me.googas.commands.bukkit.providers.registry.BukkitProvidersRegistry;
-import me.googas.commands.providers.registry.ProvidersRegistry;
 import me.googas.starbox.commands.ComponentBuilderCommands;
 import me.googas.starbox.commands.ItemBuilderCommands;
 import me.googas.starbox.commands.ScoreboardCommands;
@@ -37,11 +39,11 @@ public class StarboxPlugin extends JavaPlugin {
   private final CompatibilityManager compatibilities =
       new CompatibilityManager().addAll(new ViaVersionCompatibility());
 
-  @NonNull private final MessagesProvider messages = new BukkitMessagesProvider();
+  @NonNull private final BukkitMessagesProvider messages = new GenericBukkitMessagesProvider();
 
   @NonNull
   private final ProvidersRegistry<CommandContext> providers =
-      new BukkitProvidersRegistry(messages)
+      new ProvidersRegistry<>(messages)
           .addProviders(
               new BukkitLineProvider(),
               new BungeeChatColorProvider(),
@@ -52,8 +54,10 @@ public class StarboxPlugin extends JavaPlugin {
               new HoverEventActionProvider());
 
   @NonNull
-  private final CommandManager manager =
-      new CommandManager(this, providers, messages).registerHelpFactory();
+  private final CommandManager<CommandContext, BukkitCommand> manager = new CommandManagerBuilder<>(new BukkitAdapter(this, true))
+          .setProvidersRegistry(providers)
+          .setMessagesProvider(messages)
+          .build();
 
   @Override
   public void onEnable() {
@@ -65,15 +69,11 @@ public class StarboxPlugin extends JavaPlugin {
             .registerAll(this, BukkitYamlLanguage.of(this, "lang/sample", "lang/en")),
         new PlaceholderModule().registerAll(this, new Placeholder.Name(), new Placeholder.Ping()));
     // Command registration
-    // Parents
-    ComponentBuilderCommands.Parent componentBuilder = new ComponentBuilderCommands.Parent(manager);
-    ItemBuilderCommands.Parent itemBuilder = new ItemBuilderCommands.Parent(manager);
-    ScoreboardCommands.Parent scoreboard = new ScoreboardCommands.Parent(manager);
-    // Children
-    componentBuilder.getChildren().addAll(manager.parseCommands(new ComponentBuilderCommands()));
-    itemBuilder.getChildren().addAll(manager.parseCommands(new ItemBuilderCommands()));
-    scoreboard.getChildren().addAll((manager.parseCommands(new ScoreboardCommands().start(this))));
-    manager.registerAll(componentBuilder, itemBuilder, scoreboard).registerPlugin();
+    manager.parseAndRegisterAll(
+            new ComponentBuilderCommands(),
+            new ItemBuilderCommands(),
+            new ScoreboardCommands().start(this)
+    );
     // Check compatibilities
     compatibilities.check().getCompatibilities().stream()
         .filter(Compatibility::isEnabled)

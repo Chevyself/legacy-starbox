@@ -1,18 +1,19 @@
 package me.googas.starbox.commands;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.github.chevyself.starbox.annotations.Command;
+import com.github.chevyself.starbox.annotations.Free;
+import com.github.chevyself.starbox.annotations.Required;
+import com.github.chevyself.starbox.arguments.ArgumentBehaviour;
+import com.github.chevyself.starbox.common.CommandPermission;
+import com.github.chevyself.starbox.common.ComponentResult;
+import com.github.chevyself.starbox.result.Result;
 import lombok.NonNull;
-import me.googas.commands.annotations.Free;
-import me.googas.commands.annotations.Multiple;
-import me.googas.commands.annotations.Required;
-import me.googas.commands.bukkit.CommandManager;
-import me.googas.commands.bukkit.annotations.Command;
-import me.googas.commands.bukkit.result.Result;
-import me.googas.commands.bukkit.utils.BukkitUtils;
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import me.googas.io.StarboxFile;
 import me.googas.reflect.wrappers.WrappedClass;
 import me.googas.reflect.wrappers.WrappedConstructor;
@@ -36,7 +37,12 @@ import org.bukkit.inventory.ItemStack;
  * Commands to create {@link BaseComponent} using {@link ComponentBuilder}. Javadoc's warnings are
  * suppressed as commands already have a description and usage.
  */
-@SuppressWarnings("JavaDoc")
+@CommandPermission("starbox.component-builder")
+@Command(
+    aliases = "componentBuilder",
+    description = "Helps with the construction of chat components",
+    usage = "componentBuilder <subcommand>"
+)
 public class ComponentBuilderCommands {
 
   @NonNull
@@ -58,27 +64,27 @@ public class ComponentBuilderCommands {
 
   @NonNull private final Map<UUID, Component> builders = new HashMap<>();
 
+  @CommandPermission("starbox.component-builder")
   @Command(
       aliases = {"reset", "clear"},
-      description = "Reset the builder",
-      permission = "starbox.component-builder")
+      description = "Reset the builder")
   public Result reset(Player player) {
     builders.remove(player.getUniqueId());
     return BukkitLine.localized(player, "component-builder.reset").asResult();
   }
 
+  @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "build",
-      description = "Build an see your current component",
-      permission = "starbox.component-builder")
+      description = "Build an see your current component")
   public Result build(Player player) {
-    return new Result(this.getBuilder(player).build());
+    return new ComponentResult(this.getBuilder(player).build());
   }
 
+  @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "space",
-      description = "Appends spaces in the builder",
-      permission = "starbox.component-builder")
+      description = "Appends spaces in the builder")
   public Result space(
       Player player,
       @Free(
@@ -97,76 +103,76 @@ public class ComponentBuilderCommands {
     }
   }
 
+  @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "see",
-      description = "See how a text component would look like using color codes",
-      permission = "starbox.component-builder")
+      description = "See how a text component would look like using color codes")
   public Result see(
       Player player,
-      @Required(name = "text", description = "The text to test") @Multiple String text) {
+      @Required(name = "text", description = "The text to test", behaviour = ArgumentBehaviour.CONTINUOUS) String text) {
     return Result.of(BukkitUtils.format(text));
   }
 
+  @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "text",
-      description = "Append some text to the component and decide the format retention",
-      permission = "starbox.component-builder")
+      description = "Append some text to the component and decide the format retention")
   public Result text(
       Player player,
       @Required(name = "retention", description = "How should the text retain previous formats")
           ComponentBuilder.FormatRetention retention,
-      @Required(name = "text", description = "The text to append") @Multiple String text) {
+      @Required(name = "text", description = "The text to append", behaviour = ArgumentBehaviour.CONTINUOUS) String text) {
     this.getBuilder(player).append(text, retention);
     return BukkitLine.localized(player, "component-builder.append").format(text).asResult();
   }
 
+  @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "append",
-      description = "Append some text to the component",
-      permission = "starbox.component-builder")
+      description = "Append some text to the component")
   public Result append(
       Player player,
-      @Required(name = "text", description = "The text to append") @Multiple String text) {
+      @Required(name = "text", description = "The text to append", behaviour = ArgumentBehaviour.CONTINUOUS) String text) {
     this.getBuilder(player).append(text);
     return BukkitLine.localized(player, "component-builder.append").format(text).asResult();
   }
 
+    @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "color",
-      description = "Set the color for a current part",
-      permission = "starbox.component-builder")
+      description = "Set the color for a current part")
   public Result color(
       Player player, @Required(name = "color", description = "The color to set") ChatColor color) {
     this.getBuilder(player).color(color);
     return BukkitLine.localized(player, "component-builder.color").asResult();
   }
 
+  @CommandPermission("starbox.component-builder.colors")
   @Command(
       aliases = "colors",
-      description = "Get the color book",
-      permission = "starbox.component-builder.colors")
+      description = "Get the color book")
   public Result colors(Player player) {
     player.getInventory().addItem(ComponentBuilderCommands.colorBook);
     return BukkitLine.localized(player, "component-builder.colors").asResult();
   }
 
+  @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "click",
-      description = "Adds a click event to the current part",
-      permission = "starbox.component-builder")
+      description = "Adds a click event to the current part")
   public Result click(
       Player player,
       @Required(name = "action", description = "The action of the event") ClickEvent.Action action,
-      @Multiple @Required(name = "value", description = "The value of the action for the event")
+      @Required(name = "value", description = "The value of the action for the event", behaviour = ArgumentBehaviour.CONTINUOUS)
           String value) {
     this.getBuilder(player).event(new ClickEvent(action, value));
     return BukkitLine.localized(player, "component-builder.event").asResult();
   }
 
+    @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "hover",
-      description = "Adds a hover event to the current part",
-      permission = "starbox.component-builder")
+      description = "Adds a hover event to the current part")
   public Result hover(
       Player player,
       @Required(name = "name", description = "The name of the component to import to set as value")
@@ -187,55 +193,55 @@ public class ComponentBuilderCommands {
     return BukkitLine.localized(player, "component-builder.import.no-file").format(file).asResult();
   }
 
+    @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "obfuscate",
-      description = "Obfuscates the current part",
-      permission = "starbox.component-builder")
+      description = "Obfuscates the current part")
   public Result obfuscate(Player player) {
     this.getBuilder(player).obfuscated(true);
     return BukkitLine.localized(player, "component-builder.modify").asResult();
   }
 
+  @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "strikethrough",
-      description = "Strikethrough the current part",
-      permission = "starbox.component-builder")
+      description = "Strikethrough the current part")
   public Result strikethrough(Player player) {
     this.getBuilder(player).strikethrough(true);
     return BukkitLine.localized(player, "component-builder.modify").asResult();
   }
 
+    @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "italic",
-      description = "Italic the current part",
-      permission = "starbox.component-builder")
+      description = "Italic the current part")
   public Result italic(Player player) {
     this.getBuilder(player).italic(true);
     return BukkitLine.localized(player, "component-builder.modify").asResult();
   }
 
+    @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "bold",
-      description = "Bold the current part",
-      permission = "starbox.component-builder")
+      description = "Bold the current part")
   public Result bold(Player player) {
     this.getBuilder(player).bold(true);
     return BukkitLine.localized(player, "component-builder.modify").asResult();
   }
 
+    @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "underline",
-      description = "Underline the current part",
-      permission = "starbox.component-builder")
+      description = "Underline the current part")
   public Result underline(Player player) {
     this.getBuilder(player).underline(true);
     return BukkitLine.localized(player, "component-builder.modify").asResult();
   }
 
+    @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "export",
-      description = "Export your current builder",
-      permission = "starbox.component-builder")
+      description = "Export your current builder")
   public Result export(
       Player player,
       @Required(name = "name", description = "The name of the exported file") String name) {
@@ -255,10 +261,10 @@ public class ComponentBuilderCommands {
     }
   }
 
+    @CommandPermission("starbox.component-builder")
   @Command(
       aliases = "import",
-      description = "Import a builder",
-      permission = "starbox.component-builder")
+      description = "Import a builder")
   public Result importBuilder(
       Player player,
       @Required(name = "name", description = "The name of the file to import") String name) {
@@ -273,24 +279,6 @@ public class ComponentBuilderCommands {
       return BukkitLine.localized(player, "component-builder.import.no-file")
           .format(file)
           .asResult();
-    }
-  }
-
-  public static class Parent extends StarboxParentCommand {
-
-    public Parent(@NonNull CommandManager manager) {
-      super(
-          "componentBuilder",
-          "Helps with the construction of chat components",
-          "componentBuilder <subcommand>",
-          Collections.singletonList("cb"),
-          false,
-          manager);
-    }
-
-    @Override
-    public String getPermission() {
-      return "starbox.component-builder";
     }
   }
 

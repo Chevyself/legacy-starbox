@@ -3,7 +3,7 @@ package me.googas.starbox.modules.channels;
 import java.util.Locale;
 import java.util.Optional;
 import lombok.NonNull;
-import me.googas.commands.bukkit.utils.BukkitUtils;
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import me.googas.reflect.wrappers.chat.WrappedSoundCategory;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;

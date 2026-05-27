@@ -3,9 +3,10 @@ package me.googas.starbox.utility.items.meta;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import com.github.chevyself.starbox.common.Components;
 import lombok.Getter;
 import lombok.NonNull;
-import me.googas.commands.bungee.utils.Components;
 import me.googas.reflect.APIVersion;
 import me.googas.reflect.wrappers.WrappedClass;
 import me.googas.reflect.wrappers.WrappedField;

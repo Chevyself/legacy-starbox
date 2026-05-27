@@ -2,16 +2,17 @@ package me.googas.starbox.commands.providers;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.chevyself.starbox.bukkit.context.CommandContext;
+import com.github.chevyself.starbox.bukkit.providers.type.BukkitArgumentProvider;
+import com.github.chevyself.starbox.exceptions.ArgumentProviderException;
 import lombok.NonNull;
-import me.googas.commands.bukkit.context.CommandContext;
-import me.googas.commands.bukkit.providers.type.BukkitArgumentProvider;
-import me.googas.commands.exceptions.ArgumentProviderException;
 import me.googas.starbox.BukkitLine;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 
 /**
  * Provides {@link net.md_5.bungee.api.chat.ComponentBuilder.FormatRetention} to the {@link
- * me.googas.commands.bukkit.CommandManager}.
+ * com.github.chevyself.starbox.CommandManager}.
  */
 public class FormatRetentionProvider
     implements BukkitArgumentProvider<ComponentBuilder.FormatRetention> {
@@ -43,7 +44,7 @@ public class FormatRetentionProvider
   }
 
   @Override
-  public @NonNull List<String> getSuggestions(@NonNull String s, CommandContext commandContext) {
+  public @NonNull List<String> getSuggestions(@NonNull String s, @NonNull CommandContext commandContext) {
     return FormatRetentionProvider.suggestions;
   }
 }

@@ -1,10 +1,11 @@
 package me.googas.starbox.compatibilities;
 
 import java.util.Collection;
+
+import com.github.chevyself.starbox.bukkit.commands.BukkitCommand;
+import com.github.chevyself.starbox.bukkit.context.CommandContext;
+import com.github.chevyself.starbox.providers.StarboxContextualProvider;
 import lombok.NonNull;
-import me.googas.commands.bukkit.StarboxBukkitCommand;
-import me.googas.commands.bukkit.context.CommandContext;
-import me.googas.commands.providers.type.StarboxContextualProvider;
 import me.googas.starbox.Starbox;
 import me.googas.starbox.StarboxPlugin;
 import me.googas.starbox.modules.Module;
@@ -62,7 +63,7 @@ public interface Compatibility {
    * @return the collection of commands to register
    */
   @NonNull
-  Collection<StarboxBukkitCommand> getCommands();
+  Collection<BukkitCommand> getCommands();
 
   /**
    * Get whether the compatibility is in the class path and could be enabled.

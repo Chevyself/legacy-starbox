@@ -2,23 +2,23 @@ package me.googas.starbox.commands.providers;
 
 import java.util.Collections;
 import java.util.List;
-import lombok.NonNull;
-import me.googas.commands.bukkit.context.CommandContext;
-import me.googas.commands.bukkit.providers.type.BukkitMultiArgumentProvider;
-import me.googas.starbox.BukkitLine;
-import me.googas.starbox.Strings;
 
-/** Provides {@link BukkitLine} to the {@link me.googas.commands.bukkit.CommandManager}. */
-public class BukkitLineProvider implements BukkitMultiArgumentProvider<BukkitLine> {
+import com.github.chevyself.starbox.bukkit.context.CommandContext;
+import com.github.chevyself.starbox.bukkit.providers.type.BukkitArgumentProvider;
+import com.github.chevyself.starbox.exceptions.ArgumentProviderException;
+import lombok.NonNull;
+import me.googas.starbox.BukkitLine;
+
+/** Provides {@link BukkitLine} to the {@link com.github.chevyself.starbox.CommandManager}. */
+public class BukkitLineProvider implements BukkitArgumentProvider<BukkitLine> {
   @Override
-  public @NonNull List<String> getSuggestions(@NonNull CommandContext commandContext) {
+  public @NonNull List<String> getSuggestions(@NonNull String string, @NonNull CommandContext commandContext) {
     return Collections.singletonList("$");
   }
 
   @Override
-  public @NonNull BukkitLine fromStrings(
-      @NonNull String[] strings, @NonNull CommandContext context) {
-    String string = Strings.fromArray(strings);
+  public @NonNull BukkitLine fromString(
+      @NonNull String string, @NonNull CommandContext context) throws ArgumentProviderException {
     return BukkitLine.parse(string.trim());
   }
 

@@ -34,9 +34,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>me.googas.starbox-commands</groupId>
+            <groupId>com.github.chevyself.starbox-commands</groupId>
             <artifactId>jda</artifactId>
-            <version>e07884f180</version>
+            <version>1f35b847fb</version>
         </dependency>
     </dependencies>
 

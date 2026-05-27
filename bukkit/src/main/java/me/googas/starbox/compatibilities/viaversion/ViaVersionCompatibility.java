@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.logging.Level;
+
+import com.github.chevyself.starbox.bukkit.commands.BukkitCommand;
+import com.github.chevyself.starbox.bukkit.context.CommandContext;
+import com.github.chevyself.starbox.providers.StarboxContextualProvider;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import me.googas.commands.bukkit.StarboxBukkitCommand;
-import me.googas.commands.bukkit.context.CommandContext;
-import me.googas.commands.providers.type.StarboxContextualProvider;
 import me.googas.starbox.Starbox;
 import me.googas.starbox.compatibilities.Compatibility;
 import me.googas.starbox.compatibilities.viaversion.channels.ProtocolChannelsModule;
@@ -46,7 +47,7 @@ public class ViaVersionCompatibility implements Compatibility {
   }
 
   @Override
-  public @NonNull Collection<StarboxBukkitCommand> getCommands() {
+  public @NonNull Collection<BukkitCommand> getCommands() {
     return new ArrayList<>();
   }
 

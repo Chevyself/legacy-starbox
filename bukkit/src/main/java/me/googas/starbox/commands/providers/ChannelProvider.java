@@ -1,11 +1,11 @@
 package me.googas.starbox.commands.providers;
 
+import com.github.chevyself.starbox.bukkit.context.CommandContext;
+import com.github.chevyself.starbox.bukkit.providers.type.BukkitExtraArgumentProvider;
 import lombok.NonNull;
-import me.googas.commands.bukkit.context.CommandContext;
-import me.googas.commands.bukkit.providers.type.BukkitExtraArgumentProvider;
 import me.googas.starbox.modules.channels.Channel;
 
-/** Provides {@link Channel} to the {@link me.googas.commands.bukkit.CommandManager}. */
+/** Provides {@link Channel} to the {@link com.github.chevyself.starbox.CommandManager}. */
 public class ChannelProvider implements BukkitExtraArgumentProvider<Channel> {
 
   @Override

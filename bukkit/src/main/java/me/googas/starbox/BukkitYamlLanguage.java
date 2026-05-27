@@ -10,9 +10,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import com.github.chevyself.starbox.common.Components;
 import lombok.Getter;
 import lombok.NonNull;
-import me.googas.commands.bungee.utils.Components;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;

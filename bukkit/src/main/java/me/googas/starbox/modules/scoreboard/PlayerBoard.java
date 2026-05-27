@@ -7,9 +7,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import com.github.chevyself.starbox.bukkit.utils.BukkitUtils;
 import lombok.Getter;
 import lombok.NonNull;
-import me.googas.commands.bukkit.utils.BukkitUtils;
 import me.googas.reflect.APIVersion;
 import me.googas.reflect.wrappers.WrappedClass;
 import me.googas.reflect.wrappers.WrappedMethod;
