@@ -8,6 +8,7 @@ import java.util.function.BiConsumer;
 import lombok.NonNull;
 import me.googas.net.api.auth.Authenticator;
 import me.googas.net.api.messages.StarboxRequest;
+import me.googas.net.sockets.json.server.JsonClientThread;
 
 /** This object represents the server {@link Messenger} connects to. */
 public interface Server<M extends Messenger> {
@@ -64,8 +65,7 @@ public interface Server<M extends Messenger> {
    *
    * @return the authenticator to send requests to the server
    */
-  @NonNull
-  Optional<Authenticator<M>> getAuthenticator();
+  Optional<? extends Authenticator<JsonClientThread>> getAuthenticator();
 
   /**
    * Get the clients that are connected to the server.

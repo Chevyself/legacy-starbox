@@ -164,7 +164,6 @@ public class JsonSocketServer extends Thread implements Server<JsonClientThread>
   }
 
   @Override
-  @NonNull
   public Optional<Authenticator<JsonClientThread>> getAuthenticator() {
     return Optional.ofNullable(this.authenticator);
   }
@@ -242,6 +241,12 @@ public class JsonSocketServer extends Thread implements Server<JsonClientThread>
    */
   protected void onConnection(@NonNull JsonClientThread client) {
     System.out.println(client + " got connected");
+  }
+
+  protected void addReceptors(@NonNull Object... objects) {
+    for (Object object : objects) {
+      this.addReceptors(ReflectJsonReceptor.getReceptors(object));
+    }
   }
 
   /** This class is used to create instances of servers in a neat way. */
@@ -365,9 +370,9 @@ public class JsonSocketServer extends Thread implements Server<JsonClientThread>
     /**
      * Set the instance of {@link GsonBuilder}.
      *
-     * @see #getGsonBuilder()
      * @param gson the new builder
      * @return this same instance
+     * @see #getGsonBuilder()
      */
     @NonNull
     public ServerBuilder setGson(@NonNull GsonBuilder gson) {
