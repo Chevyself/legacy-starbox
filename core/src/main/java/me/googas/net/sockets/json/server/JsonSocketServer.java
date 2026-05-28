@@ -243,7 +243,7 @@ public class JsonSocketServer extends Thread implements Server<JsonClientThread>
     System.out.println(client + " got connected");
   }
 
-  protected void addReceptors(@NonNull Object... objects) {
+  public void addReceptors(@NonNull Object... objects) {
     for (Object object : objects) {
       this.addReceptors(ReflectJsonReceptor.getReceptors(object));
     }
