@@ -55,7 +55,9 @@
                             <artifactSet>
                                 <includes>
                                     <include>me.googas.starbox:core</include>
-                                    <include>me.googas.starbox-commands:bukkit</include>
+                                    <include>com.github.chevyself.starbox-commands:bukkit</include>
+                                    <include>com.github.chevyself.starbox-commands:core</include>
+                                    <include>com.github.chevyself.starbox-commands:common-mc</include>
                                 </includes>
                             </artifactSet>
                         </configuration>
