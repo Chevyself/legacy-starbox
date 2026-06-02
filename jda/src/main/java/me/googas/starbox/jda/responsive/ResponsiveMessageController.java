@@ -4,8 +4,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.NonNull;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.emoji.EmojiUnion;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 /** The controller to use the responsive messages. */
@@ -25,7 +25,7 @@ public interface ResponsiveMessageController {
               message -> {
                 AtomicBoolean removed = new AtomicBoolean();
                 message
-                    .getReactions(this.getUnicode(event.getReactionEmote()))
+                    .getReactions(this.getUnicode(event.getReaction().getEmoji()))
                     .forEach(
                         reaction -> {
                           if (reaction.onReaction(event) && !removed.get()) {
@@ -54,9 +54,9 @@ public interface ResponsiveMessageController {
    * @return the unicode
    */
   @NonNull
-  default String getUnicode(@NonNull MessageReaction.ReactionEmote emote) {
-    if (emote.isEmote()) {
-      return emote.getEmote().getName();
+  default String getUnicode(@NonNull EmojiUnion emote) {
+    if (emote.getType() == EmojiUnion.Type.CUSTOM) {
+      return emote.getName();
     } else {
       return emote.toString().replace("RE:", "");
     }

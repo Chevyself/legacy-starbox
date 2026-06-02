@@ -3,6 +3,7 @@ package me.googas.starbox.jda.responsive;
 import java.util.Collection;
 import lombok.NonNull;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 /** A responsive message is created for the user to react to the message with an. */
 public interface ResponsiveMessage {
@@ -38,11 +39,11 @@ public interface ResponsiveMessage {
         .ifPresent(
             unicode -> {
               if (unicode.startsWith("U+") || unicode.startsWith("u+")) {
-                message.addReaction(unicode).queue();
+                message.addReaction(Emoji.fromUnicode(unicode)).queue();
               } else {
                 message
                     .getGuild()
-                    .getEmotesByName(unicode, true)
+                    .getEmojisByName(unicode, true)
                     .forEach(emote -> message.addReaction(emote).queue());
               }
             });

@@ -11,7 +11,6 @@
     </parent>
 
     <artifactId>jda</artifactId>
-    <version>1.0.0</version>
 
     <repositories>
         <repository>
@@ -25,7 +24,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>5.0.0-alpha.5</version>
+            <version>5.0.0-beta.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>club.minnced</groupId>
