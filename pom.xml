@@ -20,6 +20,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <starbox-commands-version>1b75b68e7c</starbox-commands-version>
     </properties>
 
     <build>
