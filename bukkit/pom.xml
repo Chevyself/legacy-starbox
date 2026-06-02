@@ -110,7 +110,7 @@
         <dependency>
             <groupId>com.github.chevyself.starbox-commands</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1f35b847fb</version>
+            <version>${starbox-commands-version}</version>
         </dependency>
         <!-- Spigot -->
         <dependency>

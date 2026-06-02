@@ -245,7 +245,7 @@ public class JsonSocketServer extends Thread implements Server<JsonClientThread>
 
   public void addReceptors(@NonNull Object... objects) {
     for (Object object : objects) {
-      this.addReceptors(ReflectJsonReceptor.getReceptors(object));
+      this.receptors.addAll(ReflectJsonReceptor.getReceptors(object));
     }
   }
 
