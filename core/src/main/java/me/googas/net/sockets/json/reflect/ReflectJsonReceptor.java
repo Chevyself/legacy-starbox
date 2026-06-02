@@ -98,7 +98,7 @@ public class ReflectJsonReceptor implements JsonReceptor {
 
       for (int i = 0; i < this.getParameters().size(); i++) {
         JsonReceptorParameter<?> parameter = this.getParameters().get(i);
-        if (parameter.getClazz().isAssignableFrom(Messenger.class)) {
+        if (Messenger.class.isAssignableFrom(parameter.getClazz())) {
           objects[i] = messenger;
         } else if (request.getParameters().containsKey(parameter.getName())) {
           try {
