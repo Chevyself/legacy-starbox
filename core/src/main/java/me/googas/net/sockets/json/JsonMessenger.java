@@ -337,7 +337,7 @@ public interface JsonMessenger extends Messenger, Runnable {
                   awaitingRequest.getConsumer().accept(Optional.empty());
                 }
               } else {
-                if (!object.get("object").isJsonNull()) {
+                if (object.get("object") != null && !object.get("object").isJsonNull()) {
                   awaitingRequest
                       .getConsumer()
                       .accept(

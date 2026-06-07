@@ -19,7 +19,6 @@ public class MapBuilder<K, V> implements Builder<Map<K, V>> {
    *
    * @param map the map that is being built
    */
-  @NonNull
   protected MapBuilder(@NonNull Map<K, V> map) {
     this.map = map;
   }
