@@ -1,6 +1,8 @@
 package me.googas.net.api;
 
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import lombok.NonNull;
 import me.googas.net.api.exception.MessengerListenFailException;
@@ -26,7 +28,15 @@ public interface Messenger {
    * @param consumer the consumer to provide the object when the request gets a response
    * @param <T> the type of object that the request expects
    */
-  <T> void sendRequest(@NonNull StarboxRequest<T> request, @NonNull Consumer<Optional<T>> consumer);
+  @Deprecated
+  default <T> void sendRequest(
+      @NonNull StarboxRequest<T> request, @NonNull Consumer<Optional<T>> consumer) {
+    this.send(request)
+        .thenAccept(
+            (tObj) -> {
+              consumer.accept(Optional.ofNullable(tObj));
+            });
+  }
 
   /**
    * Sends a request to get the requested object.
@@ -36,7 +46,18 @@ public interface Messenger {
    * @return the provided object wrapped in a {@link Optional} instance
    * @throws MessengerListenFailException if the request times out
    */
-  @NonNull
-  <T> Optional<T> sendRequest(@NonNull StarboxRequest<T> request)
-      throws MessengerListenFailException;
+  @Deprecated
+  default <T> @NonNull Optional<T> sendRequest(@NonNull StarboxRequest<T> request)
+      throws MessengerListenFailException {
+    try {
+      T tObj = this.send(request).get();
+      return Optional.ofNullable(tObj);
+    } catch (ExecutionException e) {
+      throw new MessengerListenFailException("Failed execution", e);
+    } catch (InterruptedException e) {
+      throw new MessengerListenFailException("Interrupted", e);
+    }
+  }
+
+  <T> @NonNull CompletableFuture<T> send(@NonNull StarboxRequest<T> request);
 }
