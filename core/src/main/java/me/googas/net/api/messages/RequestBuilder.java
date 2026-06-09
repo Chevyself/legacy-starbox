@@ -3,6 +3,7 @@ package me.googas.net.api.messages;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import lombok.NonNull;
@@ -96,8 +97,8 @@ public class RequestBuilder<T> {
    * @return an {@link Optional} instance holding the requested object
    * @throws MessengerListenFailException if the request fails to be completed
    */
-  @NonNull
-  public Optional<T> send(Messenger messenger) throws MessengerListenFailException {
+  @Deprecated
+  public @NonNull Optional<T> send(Messenger messenger) throws MessengerListenFailException {
     return messenger == null ? Optional.empty() : messenger.sendRequest(this.build());
   }
 
@@ -107,6 +108,7 @@ public class RequestBuilder<T> {
    * @param messenger the messenger to send the request
    * @param consumer the consumer holding the {@link Optional} instance with the requested object
    */
+  @Deprecated
   public void send(Messenger messenger, @NonNull Consumer<Optional<T>> consumer) {
     if (messenger == null) {
       consumer.accept(Optional.empty());
@@ -120,8 +122,13 @@ public class RequestBuilder<T> {
    *
    * @param messenger the messenger to send the request
    */
+  @Deprecated
   public void queue(Messenger messenger) {
     this.send(messenger, (optional) -> {});
+  }
+
+  public @NonNull CompletableFuture<T> future(Messenger messenger) {
+    return messenger == null ? CompletableFuture.completedFuture(null) : messenger.send(this.build());
   }
 
   /**
@@ -131,7 +138,7 @@ public class RequestBuilder<T> {
    * @param <M> the type of messenger of the server
    * @return a map holding each messenger and its response
    */
-  @NonNull
+  @Deprecated
   public <M extends Messenger> Map<M, Optional<T>> send(Server<M> server) {
     return server == null ? new HashMap<>() : server.sendRequest(this.build());
   }
@@ -143,6 +150,7 @@ public class RequestBuilder<T> {
    * @param consumer a bi-consumer for each messenger and its response
    * @param <M> the type of messenger of the server
    */
+  @Deprecated
   public <M extends Messenger> void send(
       Server<M> server, @NonNull BiConsumer<M, Optional<T>> consumer) {
     if (server != null) {
@@ -156,8 +164,25 @@ public class RequestBuilder<T> {
    * @param server the server to send the request
    * @param <M> the type of messenger of the server
    */
+  @Deprecated
   public <M extends Messenger> void queue(@NonNull Server<M> server) {
     this.send(server, (messenger, optional) -> {});
+  }
+
+  public <M extends Messenger> CompletableFuture<Map<M, T>> future(Server<M> server) {
+    if (server == null) return CompletableFuture.completedFuture(new HashMap<>());
+
+    Map<M, CompletableFuture<T>> futures = new HashMap<>();
+    for (M messenger : server.getClients()) {
+      futures.put(messenger, messenger.send(this.build()));
+    }
+
+    return CompletableFuture.allOf(futures.values().toArray(new CompletableFuture[0]))
+            .thenApply(v -> {
+              Map<M, T> results = new HashMap<>();
+              futures.forEach((messenger, future) -> results.put(messenger, future.join()));
+              return results;
+            });
   }
 
   /**

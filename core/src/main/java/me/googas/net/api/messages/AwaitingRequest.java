@@ -1,6 +1,9 @@
 package me.googas.net.api.messages;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.NonNull;
@@ -20,11 +23,8 @@ public class AwaitingRequest<T> {
   /** The class of the object requested. */
   @NonNull @Getter private final Class<T> clazz;
 
-  /** The consumer to execute when the response is receive. */
-  @NonNull @Getter private final Consumer<Optional<T>> consumer;
-
-  /** The consumer in case an exception happens. */
-  @NonNull @Getter private final Consumer<Throwable> exceptionConsumer;
+  /** The future awaiting this request completion */
+  @NonNull private final CompletableFuture<T> future;
 
   /**
    * Create the awaiting request.
@@ -34,6 +34,7 @@ public class AwaitingRequest<T> {
    * @param consumer the consumer to execute when the response is received
    * @param exception the consumer in case of an exception
    */
+  @Deprecated
   public AwaitingRequest(
       @NonNull Request request,
       @NonNull Class<T> clazz,
@@ -41,8 +42,42 @@ public class AwaitingRequest<T> {
       @NonNull Consumer<Throwable> exception) {
     this.request = request;
     this.clazz = clazz;
-    this.consumer = consumer;
-    this.exceptionConsumer = exception;
+    this.future = composeFutureFromConsumers(consumer, exception);
+  }
+
+  public AwaitingRequest(
+      @NonNull Request request, @NonNull Class<T> clazz, @NonNull CompletableFuture<T> future) {
+    this.request = request;
+    this.clazz = clazz;
+    this.future = future;
+  }
+
+  @NonNull
+  private static <T> CompletableFuture<T> composeFutureFromConsumers(
+      @NonNull Consumer<Optional<T>> consumer, @NonNull Consumer<Throwable> exception) {
+    return new CompletableFuture<T>()
+        .handle(
+            (tObj, throwable) -> {
+              if (throwable != null) {
+                exception.accept(throwable);
+                return null;
+              } else {
+                consumer.accept(Optional.ofNullable(tObj));
+                return tObj;
+              }
+            });
+  }
+
+  public void completeExceptionally(@NonNull Throwable ex) {
+    this.future.completeExceptionally(ex);
+  }
+
+  public void complete(T tObj) {
+    this.future.complete(tObj);
+  }
+
+  public void completeFromJson(@NonNull Gson gson, @NonNull JsonElement element) {
+    this.future.complete(gson.fromJson(element, this.clazz));
   }
 
   /**
@@ -52,6 +87,7 @@ public class AwaitingRequest<T> {
    * @param clazz the class of the object that the request is waiting
    * @param consumer the consumer to execute when the response is received
    */
+  @Deprecated
   public AwaitingRequest(
       @NonNull Request request, @NonNull Class<T> clazz, @NonNull Consumer<Optional<T>> consumer) {
     this(request, clazz, consumer, Throwable::printStackTrace);

@@ -5,18 +5,10 @@ import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Type;
 import java.net.Socket;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import lombok.NonNull;
 import me.googas.net.api.Error;
@@ -72,7 +64,7 @@ public interface JsonMessenger extends Messenger, Runnable {
    * Get a receptor by its method.
    *
    * @param method the method to match
-   * @return the receptor if one with the method is found, null otherwise
+   * @return the possible receptor in an optional wrapper
    */
   @NonNull
   default Optional<JsonReceptor> getReceptor(@NonNull String method) {
@@ -123,6 +115,7 @@ public interface JsonMessenger extends Messenger, Runnable {
    * @param exception the method to execute in case an exception is thrown
    * @param <T> the type of object requested
    */
+  @Deprecated
   default <T> void sendRequest(
       @NonNull StarboxRequest<T> request,
       @NonNull Consumer<Optional<T>> consumer,
@@ -194,30 +187,6 @@ public interface JsonMessenger extends Messenger, Runnable {
   @NonNull
   Map<AwaitingRequest<?>, Long> getRequests();
 
-  /** Checks if there's request that can are taking too low. if so timeout */
-  default void checkTimeout() {
-    Set<AwaitingRequest<?>> toRemove = new HashSet<>();
-    HashMap<AwaitingRequest<?>, Long> copy = new HashMap<>(this.getRequests());
-    copy.forEach(
-        (request, start) -> {
-          if (System.currentTimeMillis() - start > this.getTimeout()) {
-            toRemove.add(request);
-            request
-                .getExceptionConsumer()
-                .accept(
-                    new MessengerListenFailException(
-                        "The request "
-                            + request
-                            + " has timed out after "
-                            + this.getTimeout()
-                            + "ms"));
-          }
-        });
-    if (!toRemove.isEmpty()) {
-      toRemove.forEach(request -> this.getRequests().remove(request));
-    }
-  }
-
   /**
    * Get the gson instance that this messenger may use.
    *
@@ -268,40 +237,15 @@ public interface JsonMessenger extends Messenger, Runnable {
   }
 
   @Override
-  default <T> void sendRequest(
-      @NonNull StarboxRequest<T> request, @NonNull Consumer<Optional<T>> consumer) {
-    this.getRequests()
-        .put(
-            new AwaitingRequest<>(request, request.getClazz(), consumer),
-            System.currentTimeMillis());
-    this.printLine(this.getGson().toJson(request));
-  }
-
-  /**
-   * Get the millis since the last message was sent.
-   *
-   * @return the millis of the last message sent
-   */
-  long getLastMessage();
-
-  @Override
   default void listen() throws MessengerListenFailException {
     try {
       StringBuilder builder = this.getBuilder();
       builder.setLength(0);
       String line;
       boolean closed = false;
-      boolean timedOut = false;
       while ((line = this.getInput().readLine()) != null
-          || (closed = this.getInput().read() == -1)
-          || (timedOut =
-              !this.getRequests().isEmpty()
-                  && (System.currentTimeMillis() - this.getLastMessage()) > this.getTimeout())) {
+          || (closed = this.getInput().read() == -1)) {
         if (closed) break;
-        if (timedOut) {
-          this.checkTimeout();
-          break;
-        }
         if (line.startsWith("Invalid Message:")) {
           this.getThrowableHandler().accept(new JsonCommunicationException(line));
           builder.setLength(0);
@@ -328,24 +272,17 @@ public interface JsonMessenger extends Messenger, Runnable {
               AwaitingRequest<?> awaitingRequest = optional.get();
               if (((Response<?>) message).isError()) {
                 if (!object.get("object").isJsonNull()) {
-                  awaitingRequest
-                      .getExceptionConsumer()
-                      .accept(
-                          new JsonInternalCommunicationException(
-                              gson.fromJson(object.get("object"), Error.class).getCause()));
+                  awaitingRequest.completeExceptionally(
+                      new JsonInternalCommunicationException(
+                          gson.fromJson(object.get("object"), Error.class).getCause()));
                 } else {
-                  awaitingRequest.getConsumer().accept(Optional.empty());
+                  awaitingRequest.complete(null);
                 }
               } else {
                 if (object.get("object") != null && !object.get("object").isJsonNull()) {
-                  awaitingRequest
-                      .getConsumer()
-                      .accept(
-                          Optional.ofNullable(
-                              gson.fromJson(
-                                  object.get("object"), (Type) awaitingRequest.getClazz())));
+                  awaitingRequest.completeFromJson(gson, object.get("object"));
                 } else {
-                  awaitingRequest.getConsumer().accept(Optional.empty());
+                  awaitingRequest.complete(null);
                 }
               }
               this.getRequests().remove(awaitingRequest);
@@ -365,31 +302,19 @@ public interface JsonMessenger extends Messenger, Runnable {
   }
 
   @Override
-  default <T> Optional<T> sendRequest(@NonNull StarboxRequest<T> request)
-      throws MessengerListenFailException {
-    long start = System.currentTimeMillis();
-    AtomicReference<T> reference = new AtomicReference<>();
-    AtomicReference<Throwable> throwable = new AtomicReference<>();
-    AtomicBoolean received = new AtomicBoolean(false);
-    this.sendRequest(
-        request,
-        obj -> {
-          obj.ifPresent(reference::set);
-          received.set(true);
-        },
-        exception -> {
-          received.set(true);
-          throwable.set(exception);
-        });
-    while (!received.get()) {
-      if ((System.currentTimeMillis() - start) > this.getTimeout()) {
-        throw new MessengerListenFailException(
-            "The request " + request + " has timed out after " + this.getTimeout() + "ms");
-      }
-    }
-    if (throwable.get() != null) {
-      throw new MessengerListenFailException(null, throwable.get());
-    }
-    return Optional.ofNullable(reference.get());
+  default <T> @NonNull CompletableFuture<T> send(@NonNull StarboxRequest<T> request) {
+    CompletableFuture<T> future = new CompletableFuture<>();
+    AwaitingRequest<T> awaitingRequest = new AwaitingRequest<>(request, request.getClazz(), future);
+    this.getRequests().put(awaitingRequest, System.currentTimeMillis());
+    this.printLine(this.getGson().toJson(request));
+    JsonScheduler.INSTANCE.schedule(
+        () ->
+            future.completeExceptionally(
+                new MessengerListenFailException(
+                    "The request " + request + " has timed out after " + this.getTimeout() + "ms")),
+        this.getTimeout(),
+        TimeUnit.MILLISECONDS);
+    future.whenComplete((result, ex) -> this.getRequests().remove(awaitingRequest));
+    return future;
   }
 }
